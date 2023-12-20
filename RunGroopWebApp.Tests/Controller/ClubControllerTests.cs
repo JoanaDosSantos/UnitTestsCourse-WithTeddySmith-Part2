@@ -5,11 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using RunGroopWebApp.Controllers;
 using RunGroopWebApp.Interfaces;
 using RunGroopWebApp.Models;
-using RunGroopWebApp.Services;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -28,8 +24,9 @@ namespace RunGroopWebApp.Tests.Controller
             _photoService = A.Fake<IPhotoService>();
             _httpContextAccessor = A.Fake<HttpContextAccessor>();
 
-            //SUT
+            //SUT - What will actually be executed on
             _clubController = new ClubController(_clubRepository, _photoService);
+
         }
 
         [Fact]
@@ -38,25 +35,29 @@ namespace RunGroopWebApp.Tests.Controller
             //Arrange - What do i need to bring in?
             var clubs = A.Fake<IEnumerable<Club>>();
             A.CallTo(() => _clubRepository.GetAll()).Returns(clubs);
+
             //Act
             var result = _clubController.Index();
+
             //Assert - Object check actions
             result.Should().BeOfType<Task<IActionResult>>();
+
         }
 
         [Fact]
-        public void ClubController_Detail_ReturnsSuccess()
+        public void ClubController_Detail_ReturnSucess()
         {
             //Arrange
             var id = 1;
             var club = A.Fake<Club>();
             A.CallTo(() => _clubRepository.GetByIdAsync(id)).Returns(club);
+
             //Act
-            var result = _clubController.DetailClub(id, "RunningClub");
+            var result = _clubController.Detail(id);
+
             //Assert
             result.Should().BeOfType<Task<IActionResult>>();
         }
-
-
     }
 }
+//Static functions cannot be tested
